@@ -1,0 +1,108 @@
+\documentclass[12pt]{article}
+\title{\textbf{Process Intro Notes}}
+\date{}
+
+\usepackage{titling}
+\setlength{\droptitle}{-8em}
+
+\usepackage[most]{tcolorbox}
+
+\newtcolorbox{definitionbox}[1][]{
+  colback=blue!5!white,
+  colframe=blue!75!black,
+  fonttitle=\bfseries,
+  title=Defintion,
+  #1
+}
+
+\newtcolorbox{questionbox}[1][]{
+  colback=white,
+  colframe=red!75!black,
+  fonttitle=\bfseries,
+  title=Defintion,
+  #1
+}
+
+\begin{document}
+\maketitle
+\vspace{-8em}
+\section{Content}
+
+\subsection{Introduction}
+
+This chapter is all about \textit{processes} (a running program). And how the OS virtualizes the CPU to create the illusion that there are a large number of CPUs on the system.
+By virtualizing the CPU it allows the user to not have to concern about wether a CPU is going to be available when running a program, instead you just run it.\\
+
+
+\begin{questionbox}[title=Question]
+  \textit{"Although there are only a few physical CPUs available, how can the OS provide the illusion of a nearly endless supply of said CPUs?"}
+\end{questionbox}
+
+
+One technique that is used to create this illusion is by \textbf{time sharing}. 
+Time sharing involves running one process, stopping it and switching to a different process and so on. 
+A potential downside of this is performance, because the CPU must be shared.\\
+
+Implementation of this requires \textbf{mechanisms} that lie on or close to the hardware such as a \textbf{context-switch.} And on top of these mecahnisms lie certain \textbf{policies} that are in place for example to decide which program to run next?
+The seperation between low level mechanisms from high level policies is a example of modularity.
+The mechanism answers the \textit{how} (how does the OS perform a context switch) while the policy answers the \textit{which} (which process should the OS run next?).
+
+\begin{definitionbox}[title= Definition]
+  \textbf{\textit{Mechanism:}} Low-level methods or protocols that implement a piece of functionality
+\end{definitionbox}
+
+
+\begin{definitionbox}[title= Definition]
+  \textbf{\textit{Policies:}} Algorithms for making some kind of decision within the OS
+\end{definitionbox}
+
+\subsection{Process}
+For the virtualization, the \textbf{machine state} is needed to determine what is important for the execution of the program. 
+\begin{enumerate}
+    \item Memory, specifically the \textbf{address space} (The memory that a process can address) of the program 
+    \item Registers, including PC, stack pointer, frame pointer etc.
+    \item I/O information, for example a list of the files the process has open 
+\end{enumerate}
+
+\begin{definitionbox}[title= Definition]
+  \textbf{\textit{Machine state:}} What a program can read or update when it is running
+\end{definitionbox}
+
+\subsection{Process API}
+A general idea of what a process API might look like is listed below.
+
+\begin{itemize}
+  \item \textbf{Create:} An OS must include some method to create a new process
+  \item \textbf{Destroy:} OS must provide some way to destroy processes forcefully.
+  \item \textbf{Wait:} Some way to wait for another process to exit.
+  \item \textbf{Miscellaneous Control:}  Other controls such as suspension of a process and resuming it later.
+  \item \textbf{Status:} A way to get the status information about a process, e.g. how long it's been running and the current state.
+\end{itemize}
+
+\subsection{Process Creation}
+To create a process:
+
+\begin{enumerate}
+  \item Load the code and any \textbf{static data} into the address space of the process
+  \item Some memory is allocated for the program's run time stack, including initialisation of stack argument like argc and argv for main() in C
+  \item The OS may allocate some memory for the program's heap. (malloc and free) 
+  \item I/O setup. In UNIX systems each process has 3 default \textbf{file descriptors} open: standard input, standard output, and standard error. 
+  \item Start the program running at the entry point (jump to main()).
+  \item Pass control of the CPU to the process and program begins execution.
+\end{enumerate}
+
+\subsection{Process States}
+A simplified view of the possible states a process can be in is listed below.
+
+\begin{itemize}
+  \item \textbf{Running:} The process is running on a processor and executing instructions. 
+  \item \textbf{Ready:} A process is ready to run but not chosen by the OS to run at this moment.
+  \item \textbf{Blocked:} A process has performed some kind of operation that makes it not ready to run until some other event takes place. (e.g. I/O request)
+\end{itemize}
+
+When a process is moved from the ready to running it is said to have been \textit{scheduled}. In contrast, a process being moved from running to ready means it has been \textit{descheduled}. 
+
+\subsection{Data Structures}
+
+\section{Homework}
+\end{document}
